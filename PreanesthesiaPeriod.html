@@ -167,3 +167,185 @@
     </div>
 
     <div class="section-header" onclick="toggleContent('terms')">
+        1b. Defining Medical Terminology
+        <span class="toggle-icon" id="icon-terms">+</span>
+    </div>
+    <div class="content" id="content-terms">
+        <p>You must use and understand professional terminology to accurately describe your findings.</p>
+        <div class="activity">
+            <h3>📝 **Terminology Match Activity**</h3>
+            <p>Click on the term to reveal its definition.</p>
+            <ul class="list-unstyled">
+                <li onclick="alert('Definition: Blue discoloration of the skin and mucous membranes due to inadequate oxygen saturation in the blood.')">**Cyanosis** (Click to define)</li>
+                <li onclick="alert('Definition: Yellow discoloration of the skin, mucous membranes, and sclera due to hyperbilirubinemia (liver disease).')">**Icterus** (Click to define)</li>
+                <li onclick="alert('Definition: The absence of all detectable electrical activity of the heart (a flat-line ECG).')">**Asystole** (Click to define)</li>
+                <li onclick="alert('Definition: Palpable skin turgor that remains tented; a key sign of dehydration.')">**Skin Tenting** (Click to define)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-header" onclick="toggleContent('regional')">
+        1c & 1d. Regional Exam & Differentiating Normal/Abnormal
+        <span class="toggle-icon" id="icon-regional">+</span>
+    </div>
+    <div class="content" id="content-regional">
+        <p>We use a systematic, regional approach to ensure nothing is missed. **Focus on areas critical for anesthetic safety!**</p>
+        
+        <h3>**Cardiovascular System (CVS) Assessment**</h3>
+        <ul>
+            <li>**Normal:** Pink mucous membranes (MM), Capillary Refill Time (CRT) $<2$ seconds, normal heart rate (HR) and rhythm.</li>
+            <li>**Abnormal (Anesthetic Concerns):**
+                <ul>
+                    <li>**Prolonged CRT ($>2$ sec) or Pale/Tacky MM:** Suggests poor perfusion, hypotension, or anemia.</li>
+                    <li>**Murmurs:** Indicate valvular disease; may require cardiac workup (e.g., echocardiogram) and tailored anesthetic protocols.</li>
+                    <li>**Arrhythmias:** Irregular heart rhythm; requires ECG evaluation.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>**Respiratory System Assessment**</h3>
+        <ul>
+            <li>**Normal:** Eupnea (normal breathing), clear auscultation of all lung fields.</li>
+            <li>**Abnormal (Anesthetic Concerns):**
+                <ul>
+                    <li>**Dyspnea (difficulty breathing) or Tachypnea (rapid breathing):** May indicate underlying pulmonary disease, requiring pre-oxygenation.</li>
+                    <li>**Crackles/Wheezes:** Indicate fluid or obstruction; increases risk for hypoxemia under anesthesia.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="quiz-container">
+        <h3>💡 **Self-Assessment: Physical Exam**</h3>
+        <div class="question" id="q1">
+            <p>What is the most critical piece of equipment to use before administering ANY anesthetic drug?</p>
+            <button class="answer-btn" onclick="checkAnswer('q1', 'stethoscope')">Stethoscope</button>
+            <button class="answer-btn" onclick="checkAnswer('q1', 'scale')">Scale</button>
+            <button class="answer-btn" onclick="checkAnswer('q1', 'thermometer')">Thermometer</button>
+            <div class="feedback" id="feedback-q1"></div>
+        </div>
+    </div>
+
+    ---
+
+    <h2>🎯 Objective 2: Anesthetic Patient Classification (ASA)</h2>
+
+    <div class="section-header" onclick="toggleContent('asa')">
+        2b. Applying the Classification System for Anesthetic Patients
+        <span class="toggle-icon" id="icon-asa">+</span>
+    </div>
+    <div class="content" id="content-asa">
+        <p>The **American Society of Anesthesiologists (ASA) Physical Status Classification System** is essential for estimating the anesthetic risk of a patient. You must assign a status (I-V, plus E) to every patient.</p>
+        
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ASA Status</th>
+                    <th>Description</th>
+                    <th>Anesthetic Risk</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>**I**</td>
+                    <td>Normal, healthy patient (e.g., routine spay/neuter).</td>
+                    <td>Minimal</td>
+                </tr>
+                <tr>
+                    <td>**II**</td>
+                    <td>Patient with mild systemic disease (e.g., controlled diabetes, well-controlled epilepsy, geriatric patient).</td>
+                    <td>Low</td>
+                </tr>
+                <tr>
+                    <td>**III**</td>
+                    <td>Patient with severe systemic disease (e.g., moderate dehydration, stable heart disease, anemia).</td>
+                    <td>Moderate</td>
+                </tr>
+                <tr>
+                    <td>**IV**</td>
+                    <td>Patient with severe systemic disease that is a constant threat to life (e.g., severe hemorrhage, uncompensated heart failure, renal failure).</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td>**V**</td>
+                    <td>Moribund patient who is not expected to survive without the operation (e.g., severe head trauma, gastric dilation-volvulus (GDV) shock).</td>
+                    <td>Extreme</td>
+                </tr>
+                <tr>
+                    <td>**E**</td>
+                    <td>Added to any class (I-V) for **Emergency** procedures.</td>
+                    <td>Increased</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section-header" onclick="toggleContent('technique')">
+        2c. How ASA Status Affects Anesthetic Technique
+        <span class="toggle-icon" id="icon-technique">+</span>
+    </div>
+    <div class="content" id="content-technique">
+        <p>The higher the ASA status, the greater the risk, and the more tailored the protocol must be.</p>
+        <ul>
+            <li>**ASA I/II:** These patients can generally tolerate standard anesthetic protocols. Monitoring is still vital, but the risk of major complications is lower.</li>
+            <li>**ASA III:** Requires **pre-anesthetic diagnostics** (blood work, radiographs) and **stabilization** (IV fluids, anti-arrhythmics) before anesthesia. The protocol will often involve lower doses and drugs with minimal cardiovascular depression.</li>
+            <li>**ASA IV/V:** These are our **highest-risk** patients. Anesthetic plans must be **multimodal** and often involve **injectable-only protocols** (Total Intravenous Anesthesia or TIVA) to better control depth. They require **aggressive pre-anesthetic stabilization**, extensive monitoring (e.g., direct blood pressure), and the availability of emergency drugs.</li>
+            <li>**The Technician's Role:** For high-risk patients (III, IV, V), your responsibility in **advanced monitoring** and **anticipating complications** increases dramatically.</li>
+        </ul>
+    </div>
+
+    <div class="quiz-container">
+        <h3>🧠 **Application Challenge: ASA Status**</h3>
+        <p>You are presented with a 10-year-old dog with chronic kidney disease (CKD). Bloodwork shows elevated BUN/Creatinine, but the patient is stable, eating, and drinking. What is the appropriate ASA status for a routine dental?</p>
+        <div class="question" id="q2">
+            <button class="answer-btn" onclick="checkAnswer('q2', 'ASA I')">ASA I</button>
+            <button class="answer-btn" onclick="checkAnswer('q2', 'ASA II')">ASA II</button>
+            <button class="answer-btn" onclick="checkAnswer('q2', 'ASA III')">ASA III</button>
+            <div class="feedback" id="feedback-q2"></div>
+        </div>
+    </div>
+
+    <p style="text-align: center; margin-top: 30px; font-style: italic;">Congratulations on completing the Preanesthetic Period module! Be sure to review the high-risk conditions and their corresponding ASA statuses.</p>
+
+</div>
+
+<script>
+    // JavaScript for toggling sections
+    function toggleContent(id) {
+        const content = document.getElementById('content-' + id);
+        const icon = document.getElementById('icon-' + id);
+
+        if (content.style.display === 'block') {
+            content.style.display = 'none';
+            icon.textContent = '+';
+        } else {
+            content.style.display = 'block';
+            icon.textContent = '–';
+        }
+    }
+
+    // JavaScript for quiz functionality
+    function checkAnswer(questionId, selectedAnswer) {
+        const feedbackDiv = document.getElementById('feedback-' + questionId);
+        let correctAnswer = '';
+        let explanation = '';
+
+        if (questionId === 'q1') {
+            correctAnswer = 'scale';
+            explanation = 'While a stethoscope is critical, the **Scale (accurate weight)** is essential for calculating drug doses. An incorrect dose is the #1 preventable anesthetic error!';
+        } else if (questionId === 'q2') {
+            correctAnswer = 'ASA III';
+            explanation = 'Chronic Kidney Disease is a **severe systemic disease** (even if stable) that significantly affects the metabolism and excretion of anesthetic drugs. This places the patient in ASA III, requiring a careful, low-cardiovascular-impact protocol.';
+        }
+
+        if (selectedAnswer === correctAnswer) {
+            feedbackDiv.innerHTML = '<span class="correct">CORRECT!</span> ' + explanation;
+        } else {
+            feedbackDiv.innerHTML = '<span class="incorrect">INCORRECT.</span> ' + explanation;
+        }
+    }
+</script>
+
+</body>
+</html>
