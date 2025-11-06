@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preanesthetic Period Module: Physical Exam & Patient Classification</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+        .module-container {
+            max-width: 900px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #0056b3;
+            border-bottom: 3px solid #0056b3;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        h2 {
+            color: #28a745;
+            border-left: 5px solid #28a745;
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        .section-header {
+            cursor: pointer;
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background-color 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-header:hover {
+            background-color: #dee2e6;
+        }
+        .content {
+            padding: 15px;
+            border-left: 1px solid #ced4da;
+            margin-left: 10px;
+            margin-bottom: 20px;
+            display: none; /* Hidden by default */
+        }
+        .toggle-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+        .content.active {
+            display: block;
+        }
+        .list-unstyled {
+            list-style: none;
+            padding-left: 0;
+        }
+        .list-unstyled li {
+            background-color: #f8f9fa;
+            margin-bottom: 5px;
+            padding: 8px;
+            border-radius: 3px;
+            border-left: 3px solid #007bff;
+        }
+
+        /* Quiz/Activity Styling */
+        .quiz-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+        }
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px dashed #ccc;
+        }
+        .answer-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .answer-btn:hover {
+            background-color: #0056b3;
+        }
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .correct {
+            color: #28a745;
+        }
+        .incorrect {
+            color: #dc3545;
+        }
+        .activity {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .activity h3 {
+            color: #0c5460;
+        }
+
+        /* ASA Classification Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #0056b3;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="module-container">
+    <h1>🩺 Preanesthetic Period: Physical Exam & Patient Classification</h1>
+    <p>Welcome, Vet Tech students! This module covers the critical initial steps in preparing a patient for anesthesia: the comprehensive physical exam and application of the ASA Physical Status Classification System.</p>
+
+    <h2>🎯 Objective 1: Preanesthetic Physical Exam</h2>
+
+    <div class="section-header" onclick="toggleContent('equipment')">
+        1a. Identifying Preanesthetic Exam Equipment
+        <span class="toggle-icon" id="icon-equipment">+</span>
+    </div>
+    <div class="content" id="content-equipment">
+        <p>A thorough physical exam requires specific tools. Know them!</p>
+        <ul class="list-unstyled">
+            <li>**Stethoscope:** For auscultation of the heart and lungs.</li>
+            <li>**Thermometer:** To accurately assess core body temperature (often rectal).</li>
+            <li>**Otoscope/Ophthalmoscope:** For detailed exam of ears/eyes (when indicated).</li>
+            <li>**Reflex Hammer:** To check neurological reflexes.</li>
+            <li>**Scale:** To obtain an accurate and current **patient weight** (crucial for drug dosing!).</li>
+            <li>**Watch/Timer with Second Hand:** For accurate measurement of heart rate, respiratory rate, and pulse quality.</li>
+        </ul>
+    </div>
+
+    <div class="section-header" onclick="toggleContent('terms')">
