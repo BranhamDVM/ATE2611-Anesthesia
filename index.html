@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Project - Home</title>
+    <title>Master Project - Home & Resources</title>
     
-    <meta name="description" content="The main entry point for the professional web development project.">
-    <meta name="keywords" content="home, index, html5, navigation, links">
+    <meta name="description" content="The main entry point for the professional web course resource site, featuring links to the instructor profile and course syllabus.">
+    <meta name="keywords" content="home, index, html5, resources, instructor, syllabus, links">
     
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     
     <header>
-        <h1>Welcome to the Master Developer Site</h1>
+        <h1>Master Web Development Course Portal</h1>
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="instructor.html">Instructor Profile</a></li> 
-                <li><a href="#about">About</a></li>
+                <li><a href="syllabus.html">Course Syllabus</a></li> 
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
@@ -27,33 +27,36 @@
     <main>
         
         <section id="hero">
-            <h2>Start Your Web Development Journey</h2>
-            <p>Explore our cutting-edge courses and meet the experts who build the web.</p>
+            <h2>Welcome to the Next Level of Web Mastery</h2>
+            <p>Your comprehensive resource center for a deep dive into modern web development.</p>
         </section>
         
-        <section id="quick-links">
-            <h3>Important Navigation Links</h3>
-            <p>Access key areas of the site directly:</p>
-            <ul>
-                <li>
-                    <a href="instructor.html">
-                        **View Instructor Profile**
-                    </a>
-                    <p>Learn more about our lead educator, Dr. Evelyn Reed.</p>
-                </li>
+        <section id="quick-access" class="resource-links">
+            <h3>Quick Access to Essential Resources</h3>
+            
+            <div class="link-container">
+                <article class="resource-card">
+                    <h4>
+                        <a href="instructor.html">
+                            **Meet Your Instructor** </a>
+                    </h4>
+                    <p>Get details on the lead developer, Dr. Evelyn Reed, her expertise, and office hours.</p>
+                </article>
                 
-                <li>
-                    <a href="courses.html">
-                        **Browse Course Catalog**
-                    </a>
-                    <p>Discover available courses and start enrolling today.</p>
-                </li>
-            </ul>
+                <article class="resource-card">
+                    <h4>
+                        <a href="syllabus.html">
+                            **View Full Course Syllabus**
+                        </a>
+                    </h4>
+                    <p>Review the course outline, weekly topics, grading policies, and required materials.</p>
+                </article>
+            </div>
         </section>
         
-        <section id="about">
-            <h3>Our Mission</h3>
-            <p>We are dedicated to providing high-quality, accessible, and practical web development education.</p>
+        <section id="overview">
+            <h3>Course Overview</h3>
+            <p>This program covers advanced concepts in JavaScript frameworks, performance optimization, and scalable cloud deployment strategies.</p>
         </section>
         
     </main>
@@ -64,7 +67,7 @@
     
     <script src="script.js"></script>
     <script>
-        // Set the current year dynamically
+        // Set the current year dynamically for the footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
 </body>
