@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Project - Home</title>
+    
+    <meta name="description" content="The main entry point for the professional web development project.">
+    <meta name="keywords" content="home, index, html5, navigation, links">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <header>
+        <h1>Welcome to the Master Developer Site</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="instructor.html">Instructor Profile</a></li> 
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        
+        <section id="hero">
+            <h2>Start Your Web Development Journey</h2>
+            <p>Explore our cutting-edge courses and meet the experts who build the web.</p>
+        </section>
+        
+        <section id="quick-links">
+            <h3>Important Navigation Links</h3>
+            <p>Access key areas of the site directly:</p>
+            <ul>
+                <li>
+                    <a href="instructor.html">
+                        **View Instructor Profile**
+                    </a>
+                    <p>Learn more about our lead educator, Dr. Evelyn Reed.</p>
+                </li>
+                
+                <li>
+                    <a href="courses.html">
+                        **Browse Course Catalog**
+                    </a>
+                    <p>Discover available courses and start enrolling today.</p>
+                </li>
+            </ul>
+        </section>
+        
+        <section id="about">
+            <h3>Our Mission</h3>
+            <p>We are dedicated to providing high-quality, accessible, and practical web development education.</p>
+        </section>
+        
+    </main>
+    
+    <footer>
+        <p>&copy; <span id="current-year"></span> Master Web Developer Project. All rights reserved.</p>
+    </footer>
+    
+    <script src="script.js"></script>
+    <script>
+        // Set the current year dynamically
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
