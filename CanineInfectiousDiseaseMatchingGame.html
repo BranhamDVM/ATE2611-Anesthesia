@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canine Infectious Diseases - Matching Game</title>
+    <style>
+        /* Accessible Color Palette */
+        :root {
+            --primary-dark: #004d40; /* Dark Teal - Header/Accents */
+            --secondary-light: #e0f2f1; /* Light Cyan - Background */
+            --text-dark: #212121; /* Dark Gray - Main Text */
+            --accent-green: #4db6ac; /* Medium Teal - Drag/Drop */
+            --accent-red: #d32f2f; /* Deep Red - Error/Feedback */
+            --accent-yellow: #ffeb3b; /* Bright Yellow - Correct/Success */
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--secondary-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 25px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        h1 {
+            margin: 0 0 5px 0;
+            font-size: 2.5em;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Drag Items (Disease Names) */
+        #drag-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f0fdfa; /* Very light teal */
+            border: 2px dashed var(--accent-green);
+            border-radius: 8px;
+            justify-content: center;
+        }
+
+        .drag-item {
+            cursor: grab;
+            padding: 12px 20px;
+            background-color: var(--accent-green);
+            color: var(--text-dark);
+            font-weight: bold;
+            border-radius: 50px;
+            box-shadow: 0 4px #00897b;
+            transition: transform 0.1s, opacity 0.3s;
+            text-align: center;
+            min-width: 150px;
+            user-select: none;
+        }
+
+        .drag-item:active {
+            cursor: grabbing;
+            transform: translateY(2px);
+            box-shadow: 0 2px #00897b;
+        }
+
+        /* Drop Zones (Descriptions) */
+        #drop-zones {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .drop-zone {
+            display: flex;
+            border: 2px solid var(--text-dark);
+            border-radius: 8px;
+            min-height: 100px;
+            background-color: #fafafa;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .drop-target-area {
+            width: 35%;
+            padding: 10px;
+            border-right: 2px solid var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #e9e9e9;
+        }
+        
+        .drop-target-area.hover {
+            border-color: var(--primary-dark);
+            background-color: #c8e6c9; /* Light successful green */
+        }
+        
+        .drop-target-area p {
+            font-size: 0.9em;
+            margin-top: 5px;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .description {
+            width: 65%;
+            padding: 15px;
+            font-size: 1em;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* State Styles */
+        .correct {
+            background-color: #c8e6c9; /* Light successful green */
+            border-color: var(--primary-dark) !important;
+        }
+        
+        .correct .description {
+            background-color: var(--white);
+        }
+        
+        .incorrect {
+            background-color: #ffcdd2; /* Very light red */
+            border-color: var(--accent-red) !important;
+            box-shadow: 0 0 5px var(--accent-red);
+        }
+
+        .dropped-item {
+            cursor: move; /* Change cursor when item is dropped in */
+            background-color: var(--primary-dark);
+            color: var(--white);
+            box-shadow: 0 4px #00332c;
+        }
+        
+        /* Button & Feedback */
+        #check-button {
+            padding: 15px 30px;
+            margin-top: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--white);
+            background-color: var(--primary-dark);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            box-shadow: 0 5px #00332c;
+        }
+
+        #check-button:hover {
+            background-color: #00695c;
+        }
+
+        #check-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px #00332c;
+        }
+
+        #feedback-area {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 20px;
+        }
+        
+        #reset-button {
+             margin-left: 15px;
+             padding: 10px 20px;
+             font-size: 1em;
+             background-color: #f44336;
+             color: white;
+             border: none;
+             border-radius: 50px;
+             cursor: pointer;
+             box-shadow: 0 3px #d32f2f;
+             display: none;
+        }
+        #reset-button:hover { background-color: #e53935; }
+        #reset-button:active { transform: translateY(1px); box-shadow: 0 2px #d32f2f; }
+
+
+        @media (max-width: 768px) {
+            .drop-zone {
+                flex-direction: column;
+            }
+            .drop-target-area, .description {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid var(--text-dark);
+            }
+            .description {
+                border-bottom: none;
+                min-height: 80px;
+                text-align: center;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .drag-item {
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Canine Infectious Diseases: Matching Challenge</h1>
+        <h2>Drag the disease name to its correct description.</h2>
+    </header>
+
+    <div class="container">
+
+        <div id="drag-items">
+            <!-- Disease names will be populated here by JavaScript -->
+        </div>
+
+        <div id="drop-zones">
+            <!-- Drop zones will be populated here by JavaScript -->
+        </div>
+
+        <div style="text-align: center;">
+            <button id="check-button" onclick="checkMatches()">Check My Answers</button>
+            <button id="reset-button" onclick="resetGame()">Reset Game</button>
+        </div>
+        
+        <div id="feedback-area"></div>
+
+    </div>
+
+    <script>
+        const diseaseData = [
+            { 
+                name: "Canine Distemper Virus (CDV)", 
+                id: "cdv", 
+                description: "Causes a systemic disease with respiratory, GI, and severe **Neurological signs** (gum-chewing seizures, myoclonus). Leads to **hard pad disease** and enamel hypoplasia. Transmitted by aerosol droplets.",
+                keyFact: "Neurological signs & Hard Pad Disease" 
+            },
+            { 
+                name: "Canine Parvovirus (CPV-2)", 
+                id: "cpv", 
+                description: "Highly resistant virus shed in **feces**. Targets rapidly dividing cells, causing hemorrhagic diarrhea, severe vomiting, and life-threatening **Leukopenia** (bone marrow suppression). Requires aggressive supportive care.",
+                keyFact: "Hemorrhagic Diarrhea & Leukopenia" 
+            },
+            { 
+                name: "Infectious Tracheobronchitis", 
+                id: "itb", 
+                description: "A highly contagious syndrome (often *Bordetella* and CPIV) characterized by a classic, dry, hacking **'honking' cough**, often exacerbated by excitement. Usually self-limiting.",
+                keyFact: "Honking Cough & Tracheal Pinch" 
+            },
+            { 
+                name: "Leptospirosis", 
+                id: "lepto", 
+                description: "**Spirochete** bacteria transmitted via contact with contaminated urine/water from wildlife. Causes acute **Kidney and Liver injury**. It is a major **Zoonotic** concern for vet staff.",
+                keyFact: "Zoonotic, Kidney/Liver Failure, Spirochete" 
+            },
+            { 
+                name: "Canine Infectious Hepatitis (ICH)", 
+                id: "ich", 
+                description: "Caused by CAV-1. Targets liver and endothelial cells, leading to **coagulopathy** and the characteristic **'Blue Eye'** (corneal edema) 7-10 days after acute illness. Vaccine uses the safer CAV-2.",
+                keyFact: "'Blue Eye' & Coagulopathy" 
+            },
+            { 
+                name: "Canine Influenza Virus (CIV)", 
+                id: "civ", 
+                description: "Highly contagious respiratory virus (H3N8/H3N2) causing cough, fever, and nasal discharge. Almost 100% of exposed, naive dogs are infected, with a low percentage developing severe **Hemorrhagic Pneumonia**.",
+                keyFact: "H3N8/H3N2 & Hemorrhagic Pneumonia" 
+            }
+        ];
+
+        let draggedItem = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeGame();
+        });
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initializeGame() {
+            const dragContainer = document.getElementById('drag-items');
+            const dropContainer = document.getElementById('drop-zones');
+            const feedbackArea = document.getElementById('feedback-area');
+            const checkButton = document.getElementById('check-button');
+            const resetButton = document.getElementById('reset-button');
+            
+            dragContainer.innerHTML = '';
+            dropContainer.innerHTML = '';
+            feedbackArea.innerHTML = '';
+            
+            checkButton.style.display = 'inline-block';
+            resetButton.style.display = 'none';
+
+            // Shuffle disease names for drag items
+            const shuffledNames = diseaseData.map(d => ({ ...d }));
+            shuffleArray(shuffledNames);
+
+            // Populate Drag Items
+            shuffledNames.forEach(disease => {
+                const item = document.createElement('div');
+                item.className = 'drag-item';
+                item.setAttribute('draggable', true);
+                item.id = `drag-${disease.id}`;
+                item.textContent = disease.name;
+                
+                item.addEventListener('dragstart', dragStart);
+                item.addEventListener('dragend', dragEnd);
+
+                dragContainer.appendChild(item);
+            });
+
+            // Populate Drop Zones
+            diseaseData.forEach(disease => { // Use original order for zones
+                const zone = document.createElement('div');
+                zone.className = 'drop-zone';
+                zone.setAttribute('data-target-id', disease.id);
+
+                const targetArea = document.createElement('div');
+                targetArea.className = 'drop-target-area';
+                targetArea.addEventListener('dragenter', dragEnter);
+                targetArea.addEventListener('dragover', dragOver);
+                targetArea.addEventListener('dragleave', dragLeave);
+                targetArea.addEventListener('drop', drop);
+                
+                const placeholder = document.createElement('p');
+                placeholder.textContent = 'DRAG DISEASE NAME HERE';
+                targetArea.appendChild(placeholder);
+
+                const descriptionArea = document.createElement('div');
+                descriptionArea.className = 'description';
+                descriptionArea.innerHTML = `<strong>Key Fact:</strong> ${disease.description}`;
+
+                zone.appendChild(targetArea);
+                zone.appendChild(descriptionArea);
+                dropContainer.appendChild(zone);
+            });
+        }
+        
+        function dragStart(e) {
+            draggedItem = e.target;
+            e.dataTransfer.setData('text/plain', e.target.id);
+            setTimeout(() => {
+                e.target.style.opacity = '0.5';
+            }, 0);
+        }
+
+        function dragEnd(e) {
+            e.target.style.opacity = '1';
+        }
+
+        function dragEnter(e) {
+            e.preventDefault();
+            this.classList.add('hover');
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function dragLeave() {
+            this.classList.remove('hover');
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            this.classList.remove('hover');
+
+            // Find the container (drop-zone) that holds this target area
+            const dropZone = this.closest('.drop-zone');
+            const targetId = dropZone.getAttribute('data-target-id');
+
+            // Check if the drop zone already has a dropped item, and move it back
+            const existingItem = this.querySelector('.drag-item');
+            if (existingItem) {
+                document.getElementById('drag-items').appendChild(existingItem);
+                existingItem.classList.remove('dropped-item');
+            }
+
+            // Remove placeholder text
+            const placeholder = this.querySelector('p');
+            if(placeholder) this.removeChild(placeholder);
+
+            // Append the new dragged item
+            this.appendChild(draggedItem);
+            draggedItem.classList.add('dropped-item');
+            draggedItem.style.opacity = '1'; // Restore full opacity
+        }
+
+        function checkMatches() {
+            let correctCount = 0;
+            const totalCount = diseaseData.length;
+            const feedbackArea = document.getElementById('feedback-area');
+            const checkButton = document.getElementById('check-button');
+            const resetButton = document.getElementById('reset-button');
+
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                const targetId = zone.getAttribute('data-target-id');
+                const droppedItem = zone.querySelector('.drag-item');
+                
+                zone.classList.remove('correct', 'incorrect');
+
+                if (droppedItem) {
+                    const droppedId = droppedItem.id.replace('drag-', '');
+
+                    if (droppedId === targetId) {
+                        zone.classList.add('correct');
+                        correctCount++;
+                        droppedItem.setAttribute('draggable', false); // Lock correct item
+                    } else {
+                        zone.classList.add('incorrect');
+                        droppedItem.setAttribute('draggable', true); // Keep incorrect item draggable
+                    }
+                } else {
+                    zone.classList.add('incorrect');
+                }
+            });
+
+            if (correctCount === totalCount) {
+                feedbackArea.style.backgroundColor = var(--accent-yellow);
+                feedbackArea.style.color = var(--primary-dark);
+                feedbackArea.textContent = `🎉 Excellent! You correctly matched all ${totalCount} diseases! You are ready for your exam!`;
+                checkButton.style.display = 'none';
+                resetButton.style.display = 'inline-block';
+            } else {
+                feedbackArea.style.backgroundColor = '#ffcdd2';
+                feedbackArea.style.color = var(--accent-red);
+                feedbackArea.textContent = `Keep studying! You have ${correctCount} out of ${totalCount} correct. Incorrect matches are highlighted in red. Try moving them!`;
+            }
+        }
+        
+        function resetGame() {
+             // Move all items back to the drag container
+             document.querySelectorAll('.drop-zone').forEach(zone => {
+                 const droppedItem = zone.querySelector('.drag-item');
+                 if (droppedItem) {
+                     document.getElementById('drag-items').appendChild(droppedItem);
+                     droppedItem.classList.remove('dropped-item');
+                     droppedItem.setAttribute('draggable', true);
+                 }
+                 zone.classList.remove('correct', 'incorrect');
+                 
+                 // Restore placeholder text
+                 const targetArea = zone.querySelector('.drop-target-area');
+                 let placeholder = targetArea.querySelector('p');
+                 if (!placeholder) {
+                     placeholder = document.createElement('p');
+                     placeholder.textContent = 'DRAG DISEASE NAME HERE';
+                     targetArea.appendChild(placeholder);
+                 }
+             });
+
+             // Re-shuffle the drag items for a new attempt
+             const dragContainer = document.getElementById('drag-items');
+             const items = Array.from(dragContainer.children);
+             shuffleArray(items);
+             items.forEach(item => dragContainer.appendChild(item));
+             
+             document.getElementById('feedback-area').textContent = '';
+             document.getElementById('feedback-area').style.backgroundColor = 'transparent';
+             document.getElementById('check-button').style.display = 'inline-block';
+             document.getElementById('reset-button').style.display = 'none';
+        }
+        
+    </script>
+</body>
+</html>
