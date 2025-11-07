@@ -1,0 +1,364 @@
+This is an excellent idea for an interactive learning tool\! I have reviewed the attached document and compiled a list of key components and their functions specifically mentioned in the text to create a highly relevant matching game.
+
+The code below is a single HTML file with embedded CSS and JavaScript, ready for you to save and run in a web browser.
+
+### 💉 Anesthetic Machine Matching Game (Based on Document)
+
+Save the code below as a single file named `vet_anesthesia_game.html`.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anesthetic Machine Matching Game</title>
+    <style>
+        /* --- CSS Styling (Embedded) --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f7;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1000px; /* Increased max-width for long functions */
+            text-align: center;
+        }
+
+        h1 {
+            color: #0077b6;
+            margin-bottom: 5px;
+            border-bottom: 2px solid #0077b6;
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        #game-area {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+        }
+
+        .column {
+            width: 48%;
+            min-height: 400px;
+            padding: 15px;
+            background-color: #e9f5f9;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .column h2 {
+            color: #0096c7;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        /* Draggable Component Styles */
+        .component {
+            background-color: #48cae4;
+            color: white;
+            padding: 12px;
+            margin: 10px auto;
+            border-radius: 8px;
+            cursor: grab;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .component:hover {
+            background-color: #00b4d8;
+        }
+
+        /* Droppable Function Styles */
+        .function-target {
+            background-color: #f7fcfd;
+            border: 3px dashed #a9def9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            font-size: 0.95em;
+            color: #333;
+            transition: background-color 0.2s, border-color 0.2s;
+            text-align: left; /* Keep function text readable */
+        }
+
+        /* Drag Over Effect */
+        .function-target.drag-over {
+            background-color: #e6f7ff;
+            border-color: #0077b6;
+        }
+
+        /* Match Success Feedback */
+        .matched {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+            border-color: #c3e6cb !important;
+            cursor: default !important;
+        }
+        .component.matched {
+            background-color: #28a745 !important;
+            cursor: default;
+        }
+
+        /* Game Messages and Score */
+        #message {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2em;
+            min-height: 20px;
+            transition: all 0.3s;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .failure {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        #score-area {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #0077b6;
+        }
+
+        #reset-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #ff6f61;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+
+        #reset-button:hover {
+            background-color: #e65c50;
+        }
+
+        .match-label {
+            display: block;
+            font-size: 1.1em;
+            color: white;
+            background-color: #28a745; 
+            padding: 5px 8px; 
+            border-radius: 5px; 
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Anesthetic Machine Component Match (Based on Lecture)</h1>
+        <p>Drag the Component from the left to its correct Function on the right.</p>
+
+        <div id="game-area">
+            <div id="components-column" class="column">
+                <h2>Components (Drag)</h2>
+                </div>
+            <div id="functions-column" class="column">
+                <h2>Functions (Drop)</h2>
+                </div>
+        </div>
+
+        <div id="message"></div>
+        <button id="reset-button" onclick="initGame()">Reset / Start Game</button>
+        <div id="score-area">Score: <span id="score">0</span> / <span id="total-matches"></span></div>
+    </div>
+    
+    <p style="margin-top: 30px;">
+        To better understand the flow, review a diagram of the high, intermediate, and low pressure circuits.     </p>
+
+    <script>
+        // --- JavaScript Logic (Embedded) ---
+
+        // Array of Component/Function pairs, derived directly from the attached document
+        const MATCHES = [
+            { component: "Pressure-Reducing Valve", 
+              [cite_start]function: "Reduces the extremely high tank pressure (500-2200 PSI) down to a safer level (40-50 PSI) before it enters the rest of the machine. [cite: 85]" },
+            { component: "Flowmeter (Glass Cylinder)", 
+              [cite_start]function: "A vertical glass cylinder with a valve at the bottom; its function is to control how much fresh oxygen enters the system. [cite: 98, 99]" },
+            { component: "Vaporizer (Precision)", 
+              [cite_start]function: "Filled with liquid anesthetic; oxygen flows through, picks up anesthetic vapor, and the dial controls the concentration delivered to the patient. [cite: 125, 126, 127]" },
+            { component: "O₂ Flush Valve", 
+              [cite_start]function: "Delivers 100% oxygen directly into the breathing circuit at a very high rate (35 to 75 L/min), bypassing the flowmeter and vaporizer. [cite: 106, 107, 108]" },
+            { component: "CO₂ Absorber Canister", 
+              [cite_start]function: "Contains absorbent granules (calcium hydroxide) that chemically remove carbon dioxide from exhaled gas so the anesthetic can be recirculated. [cite: 237, 238, 236]" },
+            { component: "Adjustable Pressure Limiting (APL) Valve", 
+              [cite_start]function: "The 'pop-off valve'; its job is to allow excess gas to escape so that the breathing system doesn't become overpressurized, preventing barotrauma to the lung. [cite: 212, 213]" },
+            { component: "Reservoir Bag", 
+              [cite_start]function: "Acts as a storage area for gases, allows observation of respirations, and permits manual ventilation ('giving a breath') to the patient. [cite: 194, 195, 196]" },
+            { component: "Tank Pressure Gauge", 
+              [cite_start]function: "Tells you how much oxygen is left in your tank by showing the current pressure inside the compressed gas cylinder (e.g., E tank). [cite: 75, 77]" },
+            { component: "Unidirectional Valve (Inspiratory/Expiratory)", 
+              [cite_start]function: "Consists of a small circular plastic disc inside a dome that ensures gas only flows in one direction around the circle system. [cite: 172, 174, 191, 192]" },
+            { component: "Pressure Manometer", 
+              [cite_start]function: "A gauge that tells us the pressure inside the breathing circuit; must never go above 15 to 20 cm H₂O during manual ventilation. [cite: 207, 210]" }
+        ];
+
+        let currentScore = 0;
+        const totalMatches = MATCHES.length;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initGame() {
+            currentScore = 0;
+            document.getElementById('score').textContent = currentScore;
+            document.getElementById('total-matches').textContent = totalMatches;
+            document.getElementById('message').className = '';
+            document.getElementById('message').textContent = 'Match all components to win!';
+
+            const componentsColumn = document.getElementById('components-column');
+            const functionsColumn = document.getElementById('functions-column');
+            componentsColumn.innerHTML = '<h2>Components (Drag)</h2>';
+            functionsColumn.innerHTML = '<h2>Functions (Drop)</h2>';
+
+            // Create shuffled copies for placement
+            const components = MATCHES.map(m => m.component);
+            const functions = MATCHES.map(m => m.function);
+
+            const shuffledComponents = shuffleArray(components);
+            const shuffledFunctions = shuffleArray(functions);
+
+            // Populate Components Column
+            shuffledComponents.forEach(component => {
+                const componentDiv = document.createElement('div');
+                componentDiv.className = 'component';
+                componentDiv.setAttribute('draggable', true);
+                // Create a clean ID for retrieval
+                componentDiv.id = 'comp-' + component.replace(/[\s\(\)]/g, '_').replace(/_+/g, '_'); 
+                componentDiv.textContent = component;
+
+                // Drag Events
+                componentDiv.addEventListener('dragstart', dragStart);
+                componentsColumn.appendChild(componentDiv);
+            });
+
+            // Populate Functions Column
+            shuffledFunctions.forEach(func => {
+                const functionDiv = document.createElement('div');
+                functionDiv.className = 'function-target';
+                functionDiv.setAttribute('data-target-function', func);
+                functionDiv.textContent = func;
+
+                // Drop Events
+                functionDiv.addEventListener('dragover', dragOver);
+                functionDiv.addEventListener('dragleave', dragLeave);
+                functionDiv.addEventListener('drop', drop);
+                functionsColumn.appendChild(functionDiv);
+            });
+        }
+
+        // --- Drag and Drop Functions ---
+
+        function dragStart(e) {
+            // Store the component name (text content)
+            e.dataTransfer.setData('text/plain', e.target.textContent);
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function dragOver(e) {
+            e.preventDefault(); 
+            e.target.classList.add('drag-over');
+        }
+
+        function dragLeave(e) {
+            e.target.classList.remove('drag-over');
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            e.target.classList.remove('drag-over');
+            
+            const draggedComponentText = e.dataTransfer.getData('text/plain');
+            const droppedFunctionText = e.target.getAttribute('data-target-function');
+
+            // Find the correct match
+            const correctMatch = MATCHES.find(m => m.component === draggedComponentText && m.function === droppedFunctionText);
+
+            const messageDiv = document.getElementById('message');
+
+            if (correctMatch) {
+                // SUCCESS
+                currentScore++;
+                document.getElementById('score').textContent = currentScore;
+                messageDiv.className = 'success';
+                messageDiv.textContent = `Correct! ${draggedComponentText} is a match.`;
+
+                // Lock the component
+                const componentId = 'comp-' + draggedComponentText.replace(/[\s\(\)]/g, '_').replace(/_+/g, '_');
+                const componentToLock = document.getElementById(componentId);
+                
+                if (componentToLock) {
+                    componentToLock.classList.add('matched');
+                    componentToLock.setAttribute('draggable', false);
+                    componentToLock.style.cursor = 'default';
+                    componentToLock.removeEventListener('dragstart', dragStart);
+                }
+                
+                // Place the component text inside the function block
+                e.target.innerHTML = `<span class="match-label">${draggedComponentText}</span> ${droppedFunctionText}`;
+                
+                // Lock the function block
+                e.target.classList.add('matched');
+                e.target.removeEventListener('dragover', dragOver);
+                e.target.removeEventListener('dragleave', dragLeave);
+                e.target.removeEventListener('drop', drop);
+
+                // Check for win condition
+                if (currentScore === totalMatches) {
+                    messageDiv.className = 'success';
+                    messageDiv.textContent = '🥳 CONGRATULATIONS! You have successfully matched all components!';
+                }
+
+            } else {
+                // FAILURE
+                messageDiv.className = 'failure';
+                messageDiv.textContent = `Incorrect Match. Try again for ${draggedComponentText}.`;
+            }
+        }
+
+        // Initialize the game when the page loads
+        window.onload = initGame;
+        
+    </script>
+</body>
+</html>
+```
