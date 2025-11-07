@@ -1,0 +1,258 @@
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight, RotateCw } from 'lucide-react';
+
+const flashcardsData = [
+  {
+    component: "Compressed Gas Supply (Oxygen Tank)",
+    function: "Stores 100% oxygen under high pressure. Provides oxygen as carrier gas for anesthetic vapor and compensates for decreased respiratory rate/tidal volume under anesthesia.",
+    pressure: "500-2200 PSI (High-Pressure Circuit)",
+    flow: "From: Source tank → To: Tank Pressure Gauge"
+  },
+  {
+    component: "Tank Pressure Gauge",
+    function: "Displays current pressure inside the oxygen tank. Used to estimate remaining oxygen (E-tank: PSI × 0.3 = liters; H-tank: PSI × 3 = liters).",
+    pressure: "500-2200 PSI (High-Pressure Circuit)",
+    flow: "From: Compressed Gas Supply → To: Pressure-Reducing Valve"
+  },
+  {
+    component: "Pressure-Reducing Valve",
+    function: "Reduces extremely high tank pressure to a safer, usable level for the anesthesia machine. Critical safety component.",
+    pressure: "Reduces from 500-2200 PSI to 40-50 PSI (From High to Intermediate-Pressure Circuit)",
+    flow: "From: Tank Pressure Gauge → To: Flowmeter (E-tank) or Hospital Distribution System (H-tank)"
+  },
+  {
+    component: "Line Pressure Gauge",
+    function: "Indicates the pressure coming from the pressure-reducing valve is appropriate (40-50 PSI). Not present on all machines.",
+    pressure: "40-50 PSI (Intermediate-Pressure Circuit)",
+    flow: "From: Pressure-Reducing Valve → To: Monitoring only (doesn't affect flow path)"
+  },
+  {
+    component: "Oxygen Flush Valve",
+    function: "Delivers 100% oxygen directly to breathing circuit at high rate (35-75 L/min) for emergencies or diluting anesthetic. Bypasses flowmeter and vaporizer.",
+    pressure: "40-50 PSI (Intermediate-Pressure Circuit)",
+    flow: "From: Pressure-Reducing Valve (bypasses flowmeter/vaporizer) → To: Breathing Circuit"
+  },
+  {
+    component: "Flowmeter",
+    function: "Controls the amount of fresh oxygen entering the system (L/min). Contains ball/bobbin indicator that rises with gas flow. Further reduces pressure.",
+    pressure: "Reduces from 40-50 PSI to ~15 PSI (From Intermediate to Low-Pressure Circuit)",
+    flow: "From: Pressure-Reducing Valve → To: Vaporizer"
+  },
+  {
+    component: "Vaporizer",
+    function: "Converts liquid anesthetic (isoflurane/sevoflurane) to vapor. Oxygen picks up anesthetic vapor as it passes through. Dial controls percentage delivered.",
+    pressure: "~15 PSI / Atmospheric (Low-Pressure Circuit)",
+    flow: "From: Flowmeter → To: Fresh Gas Outlet"
+  },
+  {
+    component: "Fresh Gas Outlet (Common Gas Outlet)",
+    function: "Starting point of the breathing circuit. Where oxygen carrying anesthetic vapor enters the breathing system.",
+    pressure: "~15 PSI / Atmospheric (Low-Pressure Circuit)",
+    flow: "From: Vaporizer → To: Breathing Circuit (Rebreathing or Non-rebreathing)"
+  },
+  {
+    component: "Inspiratory Unidirectional Valve",
+    function: "Allows gas to flow only toward the patient during inhalation. Ensures one-directional flow in circle system. Can increase breathing resistance.",
+    pressure: "Low pressure / cmH₂O (Rebreathing System)",
+    flow: "From: CO₂ Absorber Canister → To: Inspiratory Breathing Tube → Patient"
+  },
+  {
+    component: "Rebreathing Tubes (Inspiratory)",
+    function: "Corrugated tubes that carry oxygen and anesthetic from machine to patient. Prevent kinking. Available in different sizes (22mm adult, 15mm pediatric).",
+    pressure: "Low pressure / cmH₂O (Rebreathing System)",
+    flow: "From: Inspiratory Unidirectional Valve → To: Patient's Endotracheal Tube"
+  },
+  {
+    component: "Rebreathing Tubes (Expiratory)",
+    function: "Corrugated tubes that carry exhaled gas (containing CO₂) away from patient. Available in different sizes for different patient weights.",
+    pressure: "Low pressure / cmH₂O (Rebreathing System)",
+    flow: "From: Patient's Endotracheal Tube → To: Expiratory Unidirectional Valve"
+  },
+  {
+    component: "Expiratory Unidirectional Valve",
+    function: "Allows gas to flow only away from the patient during exhalation. Ensures exhaled gas (with CO₂) moves toward CO₂ absorber, not back to patient.",
+    pressure: "Low pressure / cmH₂O (Rebreathing System)",
+    flow: "From: Expiratory Breathing Tube → To: Reservoir Bag and CO₂ Absorber Canister"
+  },
+  {
+    component: "Reservoir Bag",
+    function: "Stores gases during exhalation, provides gas during inhalation. Allows observation of respirations and manual ventilation. Size = ~60 mL/kg patient weight.",
+    pressure: "Low pressure / 0-3 cmH₂O normal (Rebreathing System)",
+    flow: "From: Expiratory Valve (fills during exhalation) → To: Patient via Inspiratory Valve (empties during inhalation)"
+  },
+  {
+    component: "Manometer",
+    function: "Measures pressure in breathing circuit and patient's lungs. Normal spontaneous breathing: 0-3 cmH₂O. Manual ventilation: should not exceed 15-20 cmH₂O.",
+    pressure: "Measures 0-20+ cmH₂O (Rebreathing System)",
+    flow: "From: Monitoring only (connects to breathing circuit) → To: N/A (measurement device)"
+  },
+  {
+    component: "Adjustable Pressure Limiting (Pop-off) Valve",
+    function: "Safety feature that releases excess gas to prevent overpressurization and barotrauma. Should stay open except during manual ventilation or leak testing.",
+    pressure: "Opens when pressure exceeds ~15 cmH₂O (Rebreathing System)",
+    flow: "From: Breathing Circuit → To: Scavenging System (when pressure exceeds threshold)"
+  },
+  {
+    component: "CO₂ Absorber Canister",
+    function: "Removes carbon dioxide from exhaled gas using calcium hydroxide granules. Allows safe recirculation of gases. Color changes white→purple when spent.",
+    pressure: "Low pressure / cmH₂O (Rebreathing System)",
+    flow: "From: Expiratory Unidirectional Valve → To: Inspiratory Unidirectional Valve (after CO₂ removal)"
+  },
+  {
+    component: "Non-rebreathing Circuit (Bain/Mapleson F)",
+    function: "Delivers fresh gas directly to small patients (<7kg, necessary <3kg). No CO₂ absorber or valves = less resistance. All exhaled gas goes to scavenger.",
+    pressure: "Low pressure / cmH₂O",
+    flow: "From: Fresh Gas Outlet → To: Patient → To: Scavenging System (no recirculation)"
+  },
+  {
+    component: "Scavenging System (Active)",
+    function: "Uses vacuum/fan to remove waste anesthetic gases (WAGs) from breathing circuit. More expensive but highly effective at protecting personnel.",
+    pressure: "Negative pressure (creates suction)",
+    flow: "From: Pop-off Valve → To: Vacuum system → Outside facility"
+  },
+  {
+    component: "Scavenging System (Passive - Charcoal)",
+    function: "Uses activated charcoal canister to absorb waste anesthetic gases. Must be kept upright. Less effective at flow rates >3 L/min.",
+    pressure: "Relies on positive pressure from circuit",
+    flow: "From: Pop-off Valve → Through charcoal filter → O₂ and CO₂ exit bottom ports"
+  }
+];
+
+const FlashcardApp = () => {
+  const [currentCard, setCurrentCard] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [showSide, setShowSide] = useState('component'); // component, function, pressure, flow
+
+  const nextCard = () => {
+    setCurrentCard((prev) => (prev + 1) % flashcardsData.length);
+    setIsFlipped(false);
+    setShowSide('component');
+  };
+
+  const prevCard = () => {
+    setCurrentCard((prev) => (prev - 1 + flashcardsData.length) % flashcardsData.length);
+    setIsFlipped(false);
+    setShowSide('component');
+  };
+
+  const toggleFlip = () => {
+    setIsFlipped(!isFlipped);
+  };
+
+  const cycleSide = () => {
+    const sides = ['component', 'function', 'pressure', 'flow'];
+    const currentIndex = sides.indexOf(showSide);
+    const nextIndex = (currentIndex + 1) % sides.length;
+    setShowSide(sides[nextIndex]);
+  };
+
+  const card = flashcardsData[currentCard];
+
+  const getContent = () => {
+    switch(showSide) {
+      case 'component': return card.component;
+      case 'function': return card.function;
+      case 'pressure': return card.pressure;
+      case 'flow': return card.flow;
+      default: return card.component;
+    }
+  };
+
+  const getSideLabel = () => {
+    switch(showSide) {
+      case 'component': return 'Component Name';
+      case 'function': return 'Function';
+      case 'pressure': return 'Pressure';
+      case 'flow': return 'Oxygen Flow Path';
+      default: return '';
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-4xl font-bold text-center mb-2 text-indigo-900">
+          Anesthesia Machine Components
+        </h1>
+        <p className="text-center text-indigo-700 mb-8">
+          Interactive Flashcard Study Tool
+        </p>
+
+        <div className="bg-white rounded-lg shadow-xl p-8 mb-6">
+          <div className="flex justify-between items-center mb-6">
+            <div className="text-sm text-gray-600">
+              Card {currentCard + 1} of {flashcardsData.length}
+            </div>
+            <button
+              onClick={cycleSide}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-100 hover:bg-indigo-200 rounded-lg text-indigo-700 font-medium transition-colors"
+            >
+              <RotateCw size={18} />
+              Cycle View
+            </button>
+          </div>
+
+          <div className="mb-4">
+            <div className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-full text-sm font-semibold">
+              {getSideLabel()}
+            </div>
+          </div>
+
+          <div 
+            className="min-h-64 flex items-center justify-center p-8 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl border-2 border-indigo-200 cursor-pointer hover:border-indigo-400 transition-all"
+            onClick={toggleFlip}
+          >
+            <p className="text-xl text-gray-800 text-center leading-relaxed">
+              {getContent()}
+            </p>
+          </div>
+
+          <p className="text-center text-sm text-gray-500 mt-4">
+            Click card to flip • Use "Cycle View" to see all information
+          </p>
+        </div>
+
+        <div className="flex justify-between items-center gap-4">
+          <button
+            onClick={prevCard}
+            className="flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 rounded-lg shadow-md text-gray-700 font-medium transition-all hover:shadow-lg"
+          >
+            <ChevronLeft size={20} />
+            Previous
+          </button>
+
+          <div className="flex gap-2">
+            {flashcardsData.map((_, idx) => (
+              <div
+                key={idx}
+                className={`h-2 w-2 rounded-full transition-all ${
+                  idx === currentCard ? 'bg-indigo-600 w-8' : 'bg-gray-300'
+                }`}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={nextCard}
+            className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md text-white font-medium transition-all hover:shadow-lg"
+          >
+            Next
+            <ChevronRight size={20} />
+          </button>
+        </div>
+
+        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+          <h3 className="font-semibold text-gray-800 mb-3">How to Use:</h3>
+          <ul className="space-y-2 text-gray-700 text-sm">
+            <li>• <strong>Click "Cycle View"</strong> to rotate through Component → Function → Pressure → Flow Path</li>
+            <li>• <strong>Click the card</strong> to flip and test your knowledge</li>
+            <li>• Use <strong>Previous/Next</strong> buttons to navigate between components</li>
+            <li>• Progress dots show your position in the deck</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FlashcardApp;
